@@ -1,0 +1,57 @@
+\section{Example 1}\label{example-1}
+
+\begin{minted}{python}
+def hello_world():
+  print("Hello World!")
+\end{minted}
+
+\section{Example 2}\label{example-2}
+
+\begin{listing}[H]
+\begin{minted}{python}
+def hello_world(name="World"):
+  print(f"Hello {name}!")
+\end{minted}
+\vspace{-5pt}
+\caption{Example for Python 3.6}
+\end{listing}
+
+\section{Example 3}\label{example-3}
+
+\begin{minted}[python]{text}
+def hello_world(name="World"):
+  print(f"Hello {name}!")
+\end{minted}
+
+\section{Example 4}\label{example-4}
+
+Some text with \mintinline{text}{a inline code block}.
+
+\section{Example 5}\label{example-5}
+
+A inline code block with bash highlighting:
+\mintinline{bash}{echo "$HOME"}.
+
+\section{Example 6}\label{example-6}
+
+A inline code block \mintinline[escapeinside="||"]{text}{with options}.
+
+\section{Example 7}\label{example-7}
+
+\begin{minted}{text}
+This is a text block.
+\end{minted}
+
+\section{Example 8}\label{example-8}
+
+If you want to use code blocks for other filters you need to set the
+\mintinline{text}{minted-class} variable. Some default exceptions were
+already set (i.e. \mintinline{text}{.table}).
+
+\begin{listing}[H]
+\begin{minted}[file="results.csv", table]{text}
+
+\end{minted}
+\vspace{-5pt}
+\caption{Test Results}
+\end{listing}
