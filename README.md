@@ -24,8 +24,16 @@ def hello_world(name="World"):
 \end{minted}
 ```
 
+# Build standalone executable #
 
-# Generate test output
+You can use [Nuitka](http://nuitka.net/) to translate the filter to a C++ programm and create a standalone executable by running the command:
+
+```shell
+nuitka --recurse-all --standalone minted.py
+```
+
+
+# Generate test output #
 
 For testing purposes a Markdown document is converted to latex using pandoc and the filters. The steps for this conversion are:
 
