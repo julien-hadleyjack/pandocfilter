@@ -64,7 +64,7 @@ def check_preconditions(key, value, meta, **kwargs):
         return False
 
     classes = value[0][1]
-    default_exceptions = [".table", ".ditaa"]
+    default_exceptions = [".table", ".ditaa", ".plantuml"]
     classes_exclude = set(classes).intersection(set(meta.get("minted-exclude", default_exceptions)))
     if classes_exclude:
         return False
