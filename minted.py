@@ -9,7 +9,6 @@ https://gist.github.com/jepio/3ecaa6bba2a53ff74f2e
 """
 import textwrap
 
-import sys
 from pandocfilters import RawBlock, toJSONFilter, RawInline
 
 
