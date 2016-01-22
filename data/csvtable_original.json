@@ -124,6 +124,49 @@
         },
         {
             "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "header",
+                            "yes"
+                        ]
+                    ]
+                ],
+                "Header 1, Header 2\nText 1,Text 2\nText 3,Text 4"
+            ],
+            "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-4",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "4",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
                 [],
                 [
                     {
@@ -263,6 +306,401 @@
                 ]
             ],
             "t": "Table"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-4-1",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "4",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [],
+                [
+                    {
+                        "c": [],
+                        "t": "AlignDefault"
+                    },
+                    {
+                        "c": [],
+                        "t": "AlignDefault"
+                    },
+                    {
+                        "c": [],
+                        "t": "AlignDefault"
+                    }
+                ],
+                [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                [
+                    [
+                        {
+                            "c": [
+                                {
+                                    "c": [
+                                        {
+                                            "c": "Header",
+                                            "t": "Str"
+                                        },
+                                        {
+                                            "c": [],
+                                            "t": "Space"
+                                        },
+                                        {
+                                            "c": "1",
+                                            "t": "Str"
+                                        }
+                                    ],
+                                    "t": "Strong"
+                                }
+                            ],
+                            "t": "Plain"
+                        }
+                    ],
+                    [
+                        {
+                            "c": [
+                                {
+                                    "c": "Header",
+                                    "t": "Str"
+                                },
+                                {
+                                    "c": [],
+                                    "t": "Space"
+                                },
+                                {
+                                    "c": "2",
+                                    "t": "Str"
+                                }
+                            ],
+                            "t": "Plain"
+                        }
+                    ],
+                    [
+                        {
+                            "c": [
+                                {
+                                    "c": "Header",
+                                    "t": "Str"
+                                },
+                                {
+                                    "c": [],
+                                    "t": "Space"
+                                },
+                                {
+                                    "c": "3",
+                                    "t": "Str"
+                                }
+                            ],
+                            "t": "Plain"
+                        }
+                    ]
+                ],
+                [
+                    [
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": "Text",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [],
+                                        "t": "Space"
+                                    },
+                                    {
+                                        "c": "1",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [
+                                            [
+                                                {
+                                                    "citationHash": 0,
+                                                    "citationId": "source",
+                                                    "citationMode": {
+                                                        "c": [],
+                                                        "t": "NormalCitation"
+                                                    },
+                                                    "citationNoteNum": 0,
+                                                    "citationPrefix": [],
+                                                    "citationSuffix": []
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    "c": "[@source]",
+                                                    "t": "Str"
+                                                }
+                                            ]
+                                        ],
+                                        "t": "Cite"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ],
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": "Text",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [],
+                                        "t": "Space"
+                                    },
+                                    {
+                                        "c": "2",
+                                        "t": "Str"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ],
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": "Text",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [],
+                                        "t": "Space"
+                                    },
+                                    {
+                                        "c": "3",
+                                        "t": "Str"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ]
+                    ],
+                    [
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": "Text",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [],
+                                        "t": "Space"
+                                    },
+                                    {
+                                        "c": "4",
+                                        "t": "Str"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ],
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": "Text",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [],
+                                        "t": "Space"
+                                    },
+                                    {
+                                        "c": "5",
+                                        "t": "Str"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ],
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": "Text",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [],
+                                        "t": "Space"
+                                    },
+                                    {
+                                        "c": "6",
+                                        "t": "Str"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ]
+                    ]
+                ]
+            ],
+            "t": "Table"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-5",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "5",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "header",
+                            "yes"
+                        ]
+                    ]
+                ],
+                "**Header 1**, Header 2\nText 1[@source],Text 2\nText 3,Text 4"
+            ],
+            "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-6",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "6",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "header",
+                            "yes"
+                        ],
+                        [
+                            "align",
+                            "RL"
+                        ]
+                    ]
+                ],
+                "Header 1, Header 2\nText 1,Text 2\nText 3,Text 4"
+            ],
+            "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-7",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "7",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "header",
+                            "yes"
+                        ],
+                        [
+                            "width",
+                            "0.4 0.6"
+                        ]
+                    ]
+                ],
+                "Header 1, Header 2\nText 1,Text 2\nText 3,Text 4"
+            ],
+            "t": "CodeBlock"
         }
     ]
 ]

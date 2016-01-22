@@ -13,15 +13,13 @@ import textwrap
 from pandocfilters import RawBlock, toJSONFilter, RawInline
 
 
-def get_attribute(attributes, name):
-    for key, value in attributes:
-        if key == name:
-            return value
+def get_attributes(attributes):
+    return {key: value for key, value in attributes}
 
 
-def join_attributes(attributes, classes):
+def format_attributes(attributes, classes):
     exceptions = ["language", "caption", "minted"]
-    result = ['{}="{}"'.format(key, value) for key, value in attributes if key not in exceptions]
+    result = ['{}="{}"'.format(key, value) for key, value in attributes.items() if key not in exceptions]
     result = result + [key for key in classes if key not in exceptions]
     result = ", ".join(sorted(result))
     if result:
@@ -73,7 +71,7 @@ def check_preconditions(key, value, meta, **kwargs):
 
 
 def get_caption(paired_attributes):
-    caption_long = get_attribute(paired_attributes, "caption") or ""
+    caption_long = paired_attributes.get("caption", "")
 
     caption_split = caption_long.split("\\autocite")
     if len(caption_split) == 2:
@@ -90,10 +88,12 @@ def minted(key, value, fmt, meta):
 
     (_, classes, paired_attributes), content = value
 
-    language = get_attribute(paired_attributes, "language") or meta.get("minted-language", "text")
+    paired_attributes = get_attributes(paired_attributes)
+
+    language = paired_attributes.get("language") or meta.get("minted-language") or "text"
     caption_long, caption_short = get_caption(paired_attributes)
 
-    attributes = join_attributes(paired_attributes, classes)
+    attributes = format_attributes(paired_attributes, classes)
 
     element = RawInline if key == "Code" else RawBlock
 

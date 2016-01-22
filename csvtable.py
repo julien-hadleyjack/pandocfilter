@@ -4,11 +4,13 @@ from __future__ import print_function
 
 import csv
 import json
-import tempfile
 
 import pypandoc
 
 import requests
+import sys
+
+from io import StringIO
 from pandocfilters import Table, elt, toJSONFilter, Plain
 
 # Missing constructors for Pandoc elements
@@ -48,10 +50,25 @@ def get_header(reader, paired_attributes):
 
 
 def get_alignment(length, paired_attributes):
-    alignment = paired_attributes.get("align", "")
+    alignment = paired_attributes.get("align") or paired_attributes.get("aligns") or ""
     if len(alignment) != length:
-        alignment = " " * length
+        alignment = ["default"] * length
     return [ALIGNMENT.get(key.lower(), ALIGNMENT["default"]) for key in alignment]
+
+
+def convert_to_float(text):
+    try:
+        return float(text)
+    except ValueError:
+        return 0.0
+
+
+def get_widths(length, paired_attributes):
+    widths = paired_attributes.get("width") or paired_attributes.get("widths") or ""
+    widths = [convert_to_float(width) for width in widths.split(" ")]
+    if len(widths) != length:
+        widths = [0.0] * length
+    return widths
 
 
 def get_reader(file, paired_attributes):
@@ -62,35 +79,43 @@ def get_reader(file, paired_attributes):
     )
 
 
-def get_csv_from_url(paired_attributes):
-    filename = paired_attributes.get("file", "")
+def get_csv_from_url(filename):
+    response = requests.get(filename)
 
-    if not filename.startswith("http"):
+    if not response.ok:
+        print("CsvTable - Couldn't download: " + filename, file=sys.stderr)
         return
 
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        response = requests.get(filename, stream=True)
+    return StringIO(response.text)
 
-        if not response.ok:
-            return
 
-        for block in response.iter_content(1024):
-            tmp_file.write(block)
+def get_csv(paired_attributes, content):
+    filename = paired_attributes.get("url") or paired_attributes.get("file") or ""
 
-        paired_attributes["file"] = tmp_file.name
+    if filename.startswith("http"):
+        result = get_csv_from_url(filename)
+    elif filename:
+        result = open(filename)
+    else:
+        result = StringIO(content)
+
+    return result
 
 
 def get_table(args):
-    get_csv_from_url(args["paired_attributes"])
+    csv_input = get_csv(args["paired_attributes"], args["content"])
 
-    with open(args["paired_attributes"]["file"]) as file:
-        reader = get_reader(file, args["paired_attributes"])
-        header = get_header(reader, args["paired_attributes"])
-        content = [format_row(row) for row in reader]
+    reader = get_reader(csv_input, args["paired_attributes"])
+    header = get_header(reader, args["paired_attributes"])
+    content = [format_row(row) for row in reader]
+
+    if hasattr(csv_input, "close"):
+        csv_input.close()
 
     alignment = get_alignment(len(content[0]), args["paired_attributes"])
+    widths = get_widths(len(content[0]), args["paired_attributes"])
 
-    return Table([], alignment, [0, 0], header, content)
+    return Table([], alignment, widths, header, content)
 
 
 def csv_table(key, value, fmt, meta):

@@ -24,4 +24,4 @@ pandoc -t json -s  $location/$1_original.md |\
  ./$1.py |\
  python -m json.tool --sort-keys |\
  tee $location/$1_result.json |\
- pandoc -f json -t latex -o $location/$1_result.tex
+ pandoc -f json -t latex --biblatex -o $location/$1_result.tex

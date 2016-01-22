@@ -33,3 +33,78 @@ Text 1 & Text 2\tabularnewline
 Text 3 & Text 4\tabularnewline
 \bottomrule
 \end{longtable}
+
+\section{Example 4}\label{example-4}
+
+\begin{longtable}[c]{@{}ll@{}}
+\toprule
+Header 1 & Header 2\tabularnewline
+\midrule
+\endhead
+Text 1 & Text 2\tabularnewline
+Text 3 & Text 4\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Example 4}\label{example-4-1}
+
+\begin{longtable}[c]{@{}lll@{}}
+\toprule
+\textbf{Header 1} & Header 2 & Header 3\tabularnewline
+\midrule
+\endhead
+Text 1\autocite{source} & Text 2 & Text 3\tabularnewline
+Text 4 & Text 5 & Text 6\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Example 5}\label{example-5}
+
+\begin{longtable}[c]{@{}ll@{}}
+\toprule
+\textbf{Header 1} & Header 2\tabularnewline
+\midrule
+\endhead
+Text 1\autocite{source} & Text 2\tabularnewline
+Text 3 & Text 4\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Example 6}\label{example-6}
+
+\begin{longtable}[c]{@{}rl@{}}
+\toprule
+Header 1 & Header 2\tabularnewline
+\midrule
+\endhead
+Text 1 & Text 2\tabularnewline
+Text 3 & Text 4\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Example 7}\label{example-7}
+
+\begin{longtable}[c]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.38\columnwidth}\raggedright\strut
+Header 1
+\strut\end{minipage} &
+\begin{minipage}[b]{0.56\columnwidth}\raggedright\strut
+Header 2
+\strut\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.38\columnwidth}\raggedright\strut
+Text 1
+\strut\end{minipage} &
+\begin{minipage}[t]{0.56\columnwidth}\raggedright\strut
+Text 2
+\strut\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.38\columnwidth}\raggedright\strut
+Text 3
+\strut\end{minipage} &
+\begin{minipage}[t]{0.56\columnwidth}\raggedright\strut
+Text 4
+\strut\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
