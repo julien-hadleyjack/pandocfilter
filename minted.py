@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """
 Pandoc filter that converts code blocks from listings to minted for LaTeX output.
@@ -63,7 +64,7 @@ def check_preconditions(key, value, meta, **kwargs):
         return False
 
     classes = value[0][1]
-    default_exceptions = [".table", ".ditaa", ".plantuml"]
+    default_exceptions = ["table", "ditaa", "plantuml"]
     classes_exclude = set(classes).intersection(set(meta.get("minted-exclude", default_exceptions)))
     if classes_exclude:
         return False

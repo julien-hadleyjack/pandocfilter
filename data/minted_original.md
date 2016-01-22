@@ -1,6 +1,6 @@
 # Example 1
 
-```{language=python}
+```{language=python .test }
 def hello_world():
   print("Hello World!")
 ```

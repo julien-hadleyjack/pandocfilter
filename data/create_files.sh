@@ -1,15 +1,27 @@
 #!/usr/bin/env bash
 
-if [ "$(uname)" == "Darwin" ]; then
-  cd "$(dirname $(greadlink -f $0))";
-else
-  cd "$(dirname $(readlink -f $0))"
+if ! [[ $1 =~ ^(minted|csvtable)$ ]]; then
+	echo "Usage:"
+	echo "    create_files <test>"
+	echo
+	echo "Options:"
+	echo "    <test>   The test that should be run: minted, csvtable."
+	exit -1
 fi
 
-pandoc -t json -s  $1_original.md |\
+if [ "$(uname)" == "Darwin" ]; then
+    location=`dirname $(greadlink -f $0)`
+else
+    location=`dirname $(readlink -f $0)`
+fi
+
+
+cd $location/..
+
+pandoc -t json -s  $location/$1_original.md |\
  python -m json.tool --sort-keys |\
- tee $1_original.json |\
- ../minted.py |\
+ tee $location/$1_original.json |\
+ ./$1.py |\
  python -m json.tool --sort-keys |\
- tee $1_result.json |\
- pandoc -f json -t latex -o $1_result.tex
+ tee $location/$1_result.json |\
+ pandoc -f json -t latex -o $location/$1_result.tex
