@@ -1,8 +1,9 @@
 # Collection of custom pandoc filters
 
-| Name   | Description                                                               |
-|--------|---------------------------------------------------------------------------|
-| minted | Converts code blocks from listings environment to minted for LaTeX output |
+| Name     | Description                                                               |
+|----------|---------------------------------------------------------------------------|
+| minted   | Converts code blocks from listings environment to minted for LaTeX output |
+| csvtable | Create tables from csv files for LaTeX output                             |
 
 # minted
 
@@ -24,7 +25,11 @@ def hello_world(name="World"):
 \end{minted}
 ```
 
-# Build standalone executable #
+# csvtables
+
+# Developing
+
+## Build standalone executable #
 
 You can use [Nuitka](http://nuitka.net/) to translate the filter to a C++ programm and create a standalone executable by running the command:
 
@@ -33,7 +38,7 @@ nuitka --recurse-all --standalone minted.py
 ```
 
 
-# Generate test output #
+## Generate test output #
 
 For testing purposes a Markdown document is converted to latex using pandoc and the filters. The steps for this conversion are:
 

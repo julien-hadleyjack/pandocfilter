@@ -1,12 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import csv
 import json
+import tempfile
 
 import pypandoc
-from pandocfilters import Table, elt, toJSONFilter
 
-AlignDefault = elt("AlignDefault", 1)
+import requests
+from pandocfilters import Table, elt, toJSONFilter, Plain
+
+# Missing constructors for Pandoc elements
+ALIGNMENT = {
+    "l": elt("AlignLeft", 1)([]),
+    "c": elt("AlignCenter", 1)([]),
+    "r": elt("AlignRight", 1)([]),
+    "default": elt("AlignDefault", 1)([]),
+}
 
 
 def map_attributes(attributes):
@@ -22,22 +33,64 @@ def markdown_to_json(content):
 
 
 def para_to_plain(elem):
-    elem["t"] = "Plain"
-    return elem
+    return Plain(elem["c"])
 
 
-def get_table(filename):
-    header = []
-    content = []
-    with open(filename) as file:
-        reader = csv.reader(file)
-        for row in reader:
-            if not header:
-                header.extend([[para_to_plain(markdown_to_json(elem))] for elem in row])
-            else:
-                content.append([[para_to_plain(markdown_to_json(elem))] for elem in row])
+def format_row(row):
+    return [[para_to_plain(markdown_to_json(elem))] for elem in row]
 
-    return Table([], [AlignDefault([]), AlignDefault([])], [0, 0], header, content)
+
+def get_header(reader, paired_attributes):
+    if paired_attributes.get("header"):
+        return format_row(next(reader))
+    else:
+        return []
+
+
+def get_alignment(length, paired_attributes):
+    alignment = paired_attributes.get("align", "")
+    if len(alignment) != length:
+        alignment = " " * length
+    return [ALIGNMENT.get(key.lower(), ALIGNMENT["default"]) for key in alignment]
+
+
+def get_reader(file, paired_attributes):
+    return csv.reader(
+            file,
+            delimiter=paired_attributes.get("paired_attributes", ","),
+            quotechar=paired_attributes.get("paired_attributes", '"')
+    )
+
+
+def get_csv_from_url(paired_attributes):
+    filename = paired_attributes.get("file", "")
+
+    if not filename.startswith("http"):
+        return
+
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        response = requests.get(filename, stream=True)
+
+        if not response.ok:
+            return
+
+        for block in response.iter_content(1024):
+            tmp_file.write(block)
+
+        paired_attributes["file"] = tmp_file.name
+
+
+def get_table(args):
+    get_csv_from_url(args["paired_attributes"])
+
+    with open(args["paired_attributes"]["file"]) as file:
+        reader = get_reader(file, args["paired_attributes"])
+        header = get_header(reader, args["paired_attributes"])
+        content = [format_row(row) for row in reader]
+
+    alignment = get_alignment(len(content[0]), args["paired_attributes"])
+
+    return Table([], alignment, [0, 0], header, content)
 
 
 def csv_table(key, value, fmt, meta):
@@ -48,7 +101,7 @@ def csv_table(key, value, fmt, meta):
 
     paired_attributes = map_attributes(paired_attributes)
 
-    return get_table(paired_attributes["file"])
+    return get_table(locals())
 
 
 def main():
