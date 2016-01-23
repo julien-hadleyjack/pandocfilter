@@ -27,14 +27,14 @@ Text 3,Text 4
 | Text 1   | Text 2   |
 | Text 3   | Text 4   |
 
-# Example 4
+# Example 5
 
 | **Header 1**    | Header 2 | Header 3 |
 |-----------------|----------|----------|
 | Text 1[@source] | Text 2   | Text 3   |
 | Text 4          | Text 5   | Text 6   |
 
-# Example 5
+# Example 6
 
 ```{.table header=yes}
 **Header 1**, Header 2
@@ -56,4 +56,12 @@ Text 3,Text 4
 Header 1, Header 2
 Text 1,Text 2
 Text 3,Text 4
+```
+
+# Example 8
+
+```{.table
+    file="data/csvtable_example2.csv"
+    delimiter=;
+    header=yes}
 ```

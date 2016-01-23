@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+"""
+Create tables from csv files for LaTeX output.
+
+It is based on:
+https://github.com/mb21/pandoc-placetable
+https://github.com/baig/pandoc-csv2table
+"""
+
 from __future__ import print_function
 
 import csv
@@ -31,15 +40,16 @@ def check_preconditions(key, value, meta, **kwargs):
 
 
 def markdown_to_json(content):
-    return json.loads(pypandoc.convert(content, format='md', to="json"))[1][0]
+    result = json.loads(pypandoc.convert(content, format='md', to="json"))
+    return result[1][0] if result[1] else []
 
 
 def para_to_plain(elem):
-    return Plain(elem["c"])
+    return [Plain(elem["c"])] if elem else []
 
 
 def format_row(row):
-    return [[para_to_plain(markdown_to_json(elem))] for elem in row]
+    return [para_to_plain(markdown_to_json(elem)) for elem in row]
 
 
 def get_header(reader, paired_attributes):
@@ -74,8 +84,8 @@ def get_widths(length, paired_attributes):
 def get_reader(file, paired_attributes):
     return csv.reader(
             file,
-            delimiter=paired_attributes.get("paired_attributes", ","),
-            quotechar=paired_attributes.get("paired_attributes", '"')
+            delimiter=paired_attributes.get("delimiter", ","),
+            quotechar=paired_attributes.get("quotechar", '"')
     )
 
 

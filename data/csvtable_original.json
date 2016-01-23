@@ -311,7 +311,7 @@
             "c": [
                 1,
                 [
-                    "example-4-1",
+                    "example-5",
                     [],
                     []
                 ],
@@ -325,7 +325,7 @@
                         "t": "Space"
                     },
                     {
-                        "c": "4",
+                        "c": "5",
                         "t": "Str"
                     }
                 ]
@@ -569,7 +569,7 @@
             "c": [
                 1,
                 [
-                    "example-5",
+                    "example-6",
                     [],
                     []
                 ],
@@ -583,7 +583,7 @@
                         "t": "Space"
                     },
                     {
-                        "c": "5",
+                        "c": "6",
                         "t": "Str"
                     }
                 ]
@@ -612,7 +612,7 @@
             "c": [
                 1,
                 [
-                    "example-6",
+                    "example-6-1",
                     [],
                     []
                 ],
@@ -699,6 +699,57 @@
                     ]
                 ],
                 "Header 1, Header 2\nText 1,Text 2\nText 3,Text 4"
+            ],
+            "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-8",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "8",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "file",
+                            "data/csvtable_example2.csv"
+                        ],
+                        [
+                            "delimiter",
+                            ";"
+                        ],
+                        [
+                            "header",
+                            "yes"
+                        ]
+                    ]
+                ],
+                ""
             ],
             "t": "CodeBlock"
         }
