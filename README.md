@@ -1,9 +1,15 @@
 # Collection of custom pandoc filters
 
-| Name     | Description                                                               |
-|----------|---------------------------------------------------------------------------|
-| minted   | Converts code blocks from listings environment to minted for LaTeX output |
-| csvtable | Create tables from csv files for LaTeX output                             |
+[Pandoc](http://pandoc.org/) is a great tool that can be used to convert between many different formats (HTML, Markdown, restructuredText, LaTeX, Microsoft Word, EPUB). For example you can write a document in Markdown ()which make writing text very easy) and format the final result as a LaTeX document (which can produce beautifully formatted documents suitable for print and digital distribution).
+
+Pandoc enables you to extend the builtin functionality by [adding filters](http://pandoc.org/scripting.html). Besides [the example ones](https://github.com/jgm/pandocfilters) there are [many different ones] that provide functionality like [convert svg to pdf](https://gist.github.com/jeromerobert/3996eca3acd12e4c3d40), [automatic numbering of figures](https://github.com/tomduck/pandoc-fignos) and the [geration of diagrams](https://github.com/raghur/mermaid-filter).
+
+This project is a collection of filters that I created:
+
+| Name     | Description                              |
+|----------|------------------------------------------|
+| minted   | Use minted to show code blocks in LaTex  |
+| csvtable | Include Content from CSV files as tables |
 
 # minted
 
