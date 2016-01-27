@@ -35,7 +35,7 @@ def format_code(args):
     """
 
     minted_captioned = """
-    \\begin{{listing}}[H]
+    \\begin{{listing}}[{figure_options}]
     \\begin{{minted}}{attributes}{{{language}}}
     {content}
     \\end{{minted}}
@@ -92,6 +92,7 @@ def minted(key, value, fmt, meta):
 
     language = paired_attributes.get("language") or meta.get("minted-language") or "text"
     caption_long, caption_short = get_caption(paired_attributes)
+    figure_options = paired_attributes.get("minted-figure") or meta.get("minted-figure") or "H"
 
     attributes = format_attributes(paired_attributes, classes)
 
