@@ -20,35 +20,43 @@ class BasteTest(unittest.TestCase):
         sys.stdin.close()
         sys.stdin = self.stdin
 
+    def helper(self, function, input_file, output_file):
+        sys.stdin = open(input_file, 'r')
+
+        with tempfile.TemporaryFile("w+") as tmp:
+            with redirect_stdout(tmp):
+                function()
+            tmp.seek(0)
+            output = json.loads(tmp.read())
+
+        with open(output_file, "r") as result:
+            self.assertListEqual(output, json.load(result))
+
 
 class TestMinted(BasteTest):
 
     def test(self):
-        sys.stdin = open('data/minted_original.json', 'r')
-
-        with tempfile.TemporaryFile("w+") as tmp:
-            with redirect_stdout(tmp):
-                minted.main()
-            tmp.seek(0)
-            output = json.loads(tmp.read())
-
-        with open("data/minted_result.json", "r") as result:
-            self.assertListEqual(output, json.load(result))
+        self.helper(minted.main, "data/minted_original.json", "data/minted_result.json")
 
 
 class TestCsvTable(BasteTest):
 
     def test(self):
-        sys.stdin = open('data/csvtable_original.json', 'r')
+        self.helper(csvtable.main, "data/csvtable_original.json", "data/csvtable_result.json")
 
-        with tempfile.TemporaryFile("w+") as tmp:
-            with redirect_stdout(tmp):
-                csvtable.main()
-            tmp.seek(0)
-            output = json.loads(tmp.read())
+    def test_pad_element_list(self):
+        self.assertListEqual([0, 0, 0, 0], csvtable.pad_element([], 4, 0))
+        self.assertListEqual([1, 2, 0, 0], csvtable.pad_element([1, 2], 4, 0))
+        self.assertListEqual([1, 2, 3, 4], csvtable.pad_element([1, 2, 3, 4], 4, 0))
+        self.assertListEqual([1, 2], csvtable.pad_element([1, 2, 3, 4], 2, 0))
 
-        with open("data/csvtable_result.json", "r") as result:
-            self.assertListEqual(output, json.load(result))
+    def test_pad_element_string(self):
+        with self.assertRaises(ValueError):
+            csvtable.pad_element("", 4, 0)
+        self.assertEqual("0000", csvtable.pad_element("", 4, "0"))
+        self.assertEqual("1200", csvtable.pad_element("12", 4, "0"))
+        self.assertEqual("1234", csvtable.pad_element("1234", 4, "0"))
+        self.assertEqual("12", csvtable.pad_element("1234", 2, "0"))
 
 
 if __name__ == '__main__':
