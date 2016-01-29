@@ -14,13 +14,11 @@ from __future__ import print_function
 import argparse
 import csv
 import json
+import sys
+from io import StringIO
 
 import pypandoc
-
 import requests
-import sys
-
-from io import StringIO
 from pandocfilters import Table, elt, toJSONFilter, Plain
 
 # Missing constructors for Pandoc elements responsible for the column alignment in tables
@@ -32,17 +30,30 @@ ALIGNMENT = {
 }
 
 
-def map_attributes(attributes):
+def csv_table(key, value, fmt, meta):
     """
-    By default pandoc will return a list of string for the paired attributes.
-    This function will create a dictionary with the elements of the list.
+    The filter that creates a table from a csv file.
 
-    :param attributes: A list of in the order of: key1, value1, key2, value2,...
-    :type attributes: list[str]
-    :return: The dictionary of the paired attributes
-    :rtype: dict[str, str]
+    :param key: The type of pandoc object
+    :type key: str
+    :param value: The contents of the object
+    :type value: str | list
+    :param fmt: The target output format
+    :type fmt: str
+    :param meta: The metadata of the document.
+    :type meta: dict[str, str]
+    :return: The created table or none if this filter doesn't apply to the element
+    :rtype: dict | None
     """
-    return {key: value for key, value in attributes}
+    if not check_preconditions(key, value):
+        return
+
+    (_, classes, paired_attributes), content = value
+
+    paired_attributes = map_attributes(paired_attributes)
+    settings = generate_settings(paired_attributes, meta)
+
+    return get_table(content, settings)
 
 
 def check_preconditions(key, value):
@@ -59,175 +70,38 @@ def check_preconditions(key, value):
     return key == "CodeBlock" and "table" in value[0][1]
 
 
-def format_cell(content):
+def map_attributes(attributes):
     """
-    Interpret the cell content as markdown and convert it to the JSON structure used by pandoc.
-    This function uses `pypandoc <https://pypi.python.org/pypi/pypandoc/>`_ for the conversion.
+    By default pandoc will return a list of string for the paired attributes.
+    This function will create a dictionary with the elements of the list.
 
-    :param content: The cell content which can contain markdown formatting
-    :type content: str
-    :return: Returns either an empty list (if content is empty) or with one "Plain" element with the JSON as content
-    :rtype: list
+    :param attributes: A list of in the order of: key1, value1, key2, value2,...
+    :type attributes: list[str]
+    :return: The dictionary of the paired attributes
+    :rtype: dict[str, str]
     """
-    result = json.loads(pypandoc.convert(content, format='md', to="json"))
-    return [Plain(result[1][0]["c"])] if result[1] else []
+    return {key: value for key, value in attributes}
 
 
-def get_row(row):
+def generate_settings(paired_attributes, meta):
     """
-    Returns the content of the row already formatted.
+    Generates a settings object containg all the settings from the code and the metadata of the document.
 
-    :param row: The list of the row with the cell content as string elements
-    :type row: list[str]
-    :return: A list of the row with the cell content as elements used by pandoc
-    :rtype: list[list]
+    :param paired_attributes: The attributes of the code.
+    :type paired_attributes: dict[str, str]
+    :param meta: The metadata of the document.
+    :type meta: dict[str, str]
+    :return: The settings
+    :rtype: dict[str, str]
     """
-    return [format_cell(elem) for elem in row]
-
-
-def get_header(reader, settings):
-    """
-    Returns the content of the header already formatted if a header exists.
-
-    :param reader: The csv reader
-    :type reader: csv.reader
-    :param settings: A dictionary with settings for this script. This method uses the "header" setting.
-    :type settings: dict[str, str]
-    :return: A list of the header row with the cell content as elements used by pandoc or an empty list if no header
-    :rtype: list
-    """
-    return get_row(next(reader)) if settings["header"] else []
-
-
-def get_alignment(column_number, settings):
-    """
-    Returns usable alignment settings for the table columns.
-    The alignment can be: L (left), C (center), R (right) or d (default).
-    Pads the provided values if they don't exist or not of the required length with the default value.
-
-    :param column_number: The number of columns of the table.
-    :type column_number: int
-    :param settings: A dictionary with settings for this script. This method uses the "alignment" setting.
-    :type settings: dict[str, str]
-    :return: The list with alignments
-    :rtype: list
-    """
-    alignment = list(settings["alignment"])
-    alignment = pad_element(alignment, column_number, "d")
-    return [ALIGNMENT.get(key.lower(), ALIGNMENT["d"]) for key in alignment]
-
-
-def convert_to_float(text, default=0.0):
-    """
-    Converts a string to a float. If the string can't be converted to a string, return the default.
-
-    :param text: The string to be converted to a float (e.g. "0.4")
-    :type text: str
-    :param default: The default value
-    :type default: float
-    :return: The resulting float
-    :rtype: float
-    """
-    try:
-        return float(text)
-    except ValueError:
-        return default
-
-
-def pad_element(element, wanted_length, pad_value):
-    """
-    Pads the element with the pad_value so that it the length is equal to wanted_length.
-    If element is longer than the wanted_length, then the element will cut to that length.
-
-    :param element: The element that should be padded.
-    :type element: str | list
-    :param wanted_length: The length that the element should be.
-    :type wanted_length: int
-    :param pad_value: The value that is used for padding the element.
-    :return: The element
-    :raises ValueError: If the element is string but the pad_value is not.
-    """
-    if isinstance(element, str) and not isinstance(pad_value, str):
-        raise ValueError("Value needs to be string to concatenate to string element (not {}).".format(type(pad_value)))
-    if len(element) < wanted_length:
-        if isinstance(element, list):
-            element += [pad_value] * (wanted_length - len(element))
-        else:
-            element += pad_value * (wanted_length - len(element))
-    else:
-        element = element[:wanted_length]
-    return element
-
-
-def get_widths(column_number, settings):
-    """
-    Returns width values for the table columns.
-    Pads the provided values if they don't exist or are missing for some columnwith the default value.
-
-    :param column_number: The number of columns of the table.
-    :type column_number: int
-    :param settings: A dictionary with settings for this script. This method uses the "widths" setting.
-    :type settings: dict[str, str]
-    :return: The list with the widths
-    :rtype: list
-    """
-    widths = [convert_to_float(width) for width in settings["widths"].split(" ")]
-    widths = pad_element(widths, column_number, 0.0)
-    return widths
-
-
-def get_reader(file, settings):
-    """
-    Returns the CSV reader for a file.
-
-    :param file: The file for the CSV content.
-    :type file: io.StringIO
-    :param settings: The paired attributes for the code which can contain "delimiter" and "quotechar" settings.
-    :return: The CSV reader
-    :rtype: csv.reader
-    """
-    return csv.reader(file, delimiter=settings["delimiter"], quotechar=settings["quote_char"])
-
-
-def get_content_from_url(url):
-    """
-    Get content from an url. This method can be used to download a CSV file.
-
-    :param url: The url where the content should be loaded from.
-    :type url: str
-    :return: The content at the url.
-    :rtype: io.StringIO
-    """
-    response = requests.get(url)
-
-    if not response.ok:
-        print("CsvTable - Couldn't download: " + url, file=sys.stderr)
-        return
-
-    return StringIO(response.text)
-
-
-def get_csv(content, settings):
-    """
-    Return the CSV content. This method will look at urls, files and code block content.
-
-    :param content: The code block content
-    :type content: str
-    :param settings: A dictionary with settings for this script. This method uses the "file_name" setting.
-    :type settings: dict[str, str]
-    :return: The CSV content.
-    :rtype: io.StringIO
-    """
-    file_name = settings["file_name"]
-
-    if file_name.startswith("http"):
-        result = get_content_from_url(file_name)
-    elif file_name:
-        result = open(file_name)
-    else:
-        result = StringIO(content)
-
-    return result
+    return {
+        "file_name": get_setting(["url", "file"], paired_attributes),
+        "delimiter": get_setting("delimiter", paired_attributes, meta, ","),
+        "quote_char": get_setting("quotechar", paired_attributes, meta, '"'),
+        "header": get_setting(["header", "headers"], paired_attributes, meta, False),
+        "alignment": get_setting(["align", "aligns", "alignment", "alignments"], paired_attributes, meta),
+        "widths": get_setting(["width", "widths"], paired_attributes, meta)
+    }
 
 
 def get_setting(key, paired_attributes, meta=None, default_value="", remove=False):
@@ -283,51 +157,175 @@ def get_table(content, settings):
     return Table([], alignment, widths, header, csv_content)
 
 
-def generate_settings(paired_attributes, meta):
+def get_csv(content, settings):
     """
-    Generates a settings object containg all the settings from the code and the metadata of the document.
+    Return the CSV content. This method will look at urls, files and code block content.
 
-    :param paired_attributes: The attributes of the code.
-    :type paired_attributes: dict[str, str]
-    :param meta: The metadata of the document.
-    :type meta: dict[str, str]
-    :return: The settings
-    :rtype: dict[str, str]
+    :param content: The code block content
+    :type content: str
+    :param settings: A dictionary with settings for this script. This method uses the "file_name" setting.
+    :type settings: dict[str, str]
+    :return: The CSV content.
+    :rtype: io.StringIO
     """
-    return {
-        "file_name":  get_setting(["url", "file"], paired_attributes),
-        "delimiter":  get_setting("delimiter", paired_attributes, meta, ","),
-        "quote_char": get_setting("quotechar", paired_attributes, meta, '"'),
-        "header":     get_setting(["header", "headers"], paired_attributes, meta, False),
-        "alignment":  get_setting(["align", "aligns", "alignment", "alignments"], paired_attributes, meta),
-        "widths":     get_setting(["width", "widths"], paired_attributes, meta)
-    }
+    file_name = settings["file_name"]
+
+    if file_name.startswith("http"):
+        result = get_content_from_url(file_name)
+    elif file_name:
+        result = open(file_name)
+    else:
+        result = StringIO(content)
+
+    return result
 
 
-def csv_table(key, value, fmt, meta):
+def get_content_from_url(url):
     """
-    The filter that creates a table from a csv file.
+    Get content from an url. This method can be used to download a CSV file.
 
-    :param key: The type of pandoc object
-    :type key: str
-    :param value: The contents of the object
-    :type value: str | list
-    :param fmt: The target output format
-    :type fmt: str
-    :param meta: The metadata of the document.
-    :type meta: dict[str, str]
-    :return: The created table or none if this filter doesn't apply to the element
-    :rtype: dict | None
+    :param url: The url where the content should be loaded from.
+    :type url: str
+    :return: The content at the url.
+    :rtype: io.StringIO
     """
-    if not check_preconditions(key, value):
+    response = requests.get(url)
+
+    if not response.ok:
+        print("CsvTable - Couldn't download: " + url, file=sys.stderr)
         return
 
-    (_, classes, paired_attributes), content = value
+    return StringIO(response.text)
 
-    paired_attributes = map_attributes(paired_attributes)
-    settings = generate_settings(paired_attributes, meta)
 
-    return get_table(content, settings)
+def get_reader(file, settings):
+    """
+    Returns the CSV reader for a file.
+
+    :param file: The file for the CSV content.
+    :type file: io.StringIO
+    :param settings: The paired attributes for the code which can contain "delimiter" and "quotechar" settings.
+    :return: The CSV reader
+    :rtype: csv.reader
+    """
+    return csv.reader(file, delimiter=settings["delimiter"], quotechar=settings["quote_char"])
+
+
+def get_header(reader, settings):
+    """
+    Returns the content of the header already formatted if a header exists.
+
+    :param reader: The csv reader
+    :type reader: csv.reader
+    :param settings: A dictionary with settings for this script. This method uses the "header" setting.
+    :type settings: dict[str, str]
+    :return: A list of the header row with the cell content as elements used by pandoc or an empty list if no header
+    :rtype: list
+    """
+    return get_row(next(reader)) if settings["header"] else []
+
+
+def get_row(row):
+    """
+    Returns the content of the row already formatted.
+
+    :param row: The list of the row with the cell content as string elements
+    :type row: list[str]
+    :return: A list of the row with the cell content as elements used by pandoc
+    :rtype: list[list]
+    """
+    return [format_cell(elem) for elem in row]
+
+
+def format_cell(content):
+    """
+    Interpret the cell content as markdown and convert it to the JSON structure used by pandoc.
+    This function uses `pypandoc <https://pypi.python.org/pypi/pypandoc/>`_ for the conversion.
+
+    :param content: The cell content which can contain markdown formatting
+    :type content: str
+    :return: Returns either an empty list (if content is empty) or with one "Plain" element with the JSON as content
+    :rtype: list
+    """
+    result = json.loads(pypandoc.convert(content, format='md', to="json"))
+    return [Plain(result[1][0]["c"])] if result[1] else []
+
+
+def get_alignment(column_number, settings):
+    """
+    Returns usable alignment settings for the table columns.
+    The alignment can be: L (left), C (center), R (right) or d (default).
+    Pads the provided values if they don't exist or not of the required length with the default value.
+
+    :param column_number: The number of columns of the table.
+    :type column_number: int
+    :param settings: A dictionary with settings for this script. This method uses the "alignment" setting.
+    :type settings: dict[str, str]
+    :return: The list with alignments
+    :rtype: list
+    """
+    alignment = list(settings["alignment"])
+    alignment = pad_element(alignment, column_number, "d")
+    return [ALIGNMENT.get(key.lower(), ALIGNMENT["d"]) for key in alignment]
+
+
+def pad_element(element, wanted_length, pad_value):
+    """
+    Pads the element with the pad_value so that it the length is equal to wanted_length.
+    If element is longer than the wanted_length, then the element will cut to that length.
+
+    :param element: The element that should be padded.
+    :type element: str | list
+    :param wanted_length: The length that the element should be.
+    :type wanted_length: int
+    :param pad_value: The value that is used for padding the element.
+    :return: The element
+    :raises ValueError: If the element is string but the pad_value is not.
+    """
+    if isinstance(element, str) and not isinstance(pad_value, str):
+        raise ValueError("Value needs to be string to concatenate to string element (not {}).".format(type(pad_value)))
+    if len(element) < wanted_length:
+        if isinstance(element, list):
+            element += [pad_value] * (wanted_length - len(element))
+        else:
+            element += pad_value * (wanted_length - len(element))
+    else:
+        element = element[:wanted_length]
+    return element
+
+
+def get_widths(column_number, settings):
+    """
+    Returns width values for the table columns.
+    Pads the provided values if they don't exist or are missing for some columnwith the default value.
+
+    :param column_number: The number of columns of the table.
+    :type column_number: int
+    :param settings: A dictionary with settings for this script. This method uses the "widths" setting.
+    :type settings: dict[str, str]
+    :return: The list with the widths
+    :rtype: list
+    """
+    widths = [convert_to_float(width) for width in settings["widths"].split(" ")]
+    widths = pad_element(widths, column_number, 0.0)
+    return widths
+
+
+def convert_to_float(text, default=0.0):
+    """
+    Converts a string to a float. If the string can't be converted to a string, return the default.
+
+    :param text: The string to be converted to a float (e.g. "0.4")
+    :type text: str
+    :param default: The default value
+    :type default: float
+    :return: The resulting float
+    :rtype: float
+    """
+    try:
+        return float(text)
+    except ValueError:
+        return default
 
 
 def parse_arguments():
