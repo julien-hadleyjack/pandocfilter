@@ -1,9 +1,5 @@
 # Collection of custom pandoc filters
 
-[pandoc](http://pandoc.org/) is a great tool that can be used to convert between many different formats (HTML, Markdown, restructuredText, LaTeX, Microsoft Word, EPUB, ...). For example you can write a document in Markdown (which make writing text very easy) and format the final result as a LaTeX document (which can produce beautifully formatted documents suitable for print and digital distribution) by using pandoc to convert between the two formats.
-
-pandoc enables you to extend the builtin functionality by [adding filters](http://pandoc.org/scripting.html). Besides [the example ones](https://github.com/jgm/pandocfilters) there are [many different ones](https://github.com/jgm/pandoc/wiki/pandoc-Filters) from the community that provide functionality like [convert svg to pdf](https://gist.github.com/jeromerobert/3996eca3acd12e4c3d40), [automatic numbering of figures](https://github.com/tomduck/pandoc-fignos) and the [generation of diagrams](https://github.com/raghur/mermaid-filter).
-
 This project is a collection of filters that I created:
 
 | Name                  | Description                              |
@@ -11,7 +7,11 @@ This project is a collection of filters that I created:
 | [minted](#minted)     | Use minted to show code blocks in LaTex  |
 | [csvtable](#csvtable) | Include Content from CSV files as tables |
 
-To use them just clone this repository and install the dependencies:
+[pandoc](http://pandoc.org/) is a great tool that can be used to convert between many different formats (HTML, Markdown, restructuredText, LaTeX, Microsoft Word, EPUB, ...). For example you can write a document in Markdown (which make writing text very easy) and format the final result as a LaTeX document (which can produce beautifully formatted documents suitable for print and digital distribution) by using pandoc to convert between the two formats.
+
+pandoc enables you to extend the builtin functionality by [adding filters](http://pandoc.org/scripting.html). Besides [the example ones](https://github.com/jgm/pandocfilters) there are [many different ones](https://github.com/jgm/pandoc/wiki/pandoc-Filters) from the community that provide functionality like [convert svg to pdf](https://gist.github.com/jeromerobert/3996eca3acd12e4c3d40), [automatic numbering of figures](https://github.com/tomduck/pandoc-fignos) and the [generation of diagrams](https://github.com/raghur/mermaid-filter).
+
+To use the filters in this project just clone this repository and install the dependencies:
 
 ```shell
 git clone https://github.com/julien-hadleyjack/pandocfilter.git
@@ -89,7 +89,7 @@ There are some global settings you can configure using the [YAML metadata block]
 ```
 <pre lang="yaml"><code>
 ---
-minted-exclude: [.table, .diagram]
+minted-exclude: [table, diagram]
 minted-class: false
 ---
 </code></pre>
