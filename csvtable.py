@@ -92,12 +92,12 @@ def generate_settings(paired_attributes, meta):
     :param meta: The metadata of the document.
     :type meta: dict[str, str]
     :return: The settings
-    :rtype: dict[str, str]
+    :rtype: dict[str, str | int]
     """
     return {
         "file_name": get_setting(["url", "file"], paired_attributes),
         "delimiter": get_setting("delimiter", paired_attributes, meta, ","),
-        "quote_char": get_setting("quotechar", paired_attributes, meta, '"'),
+        "quote_char": get_setting(["quotechar", "quote_char"], paired_attributes, meta, '"'),
         "header": get_setting(["header", "headers"], paired_attributes, meta, False),
         "alignment": get_setting(["align", "aligns", "alignment", "alignments"], paired_attributes, meta),
         "widths": get_setting(["width", "widths"], paired_attributes, meta)
@@ -151,8 +151,10 @@ def get_table(content, settings):
     if hasattr(csv_input, "close"):
         csv_input.close()
 
-    alignment = get_alignment(len(csv_content[0]), settings)
-    widths = get_widths(len(csv_content[0]), settings)
+    settings["column_number"] = len(csv_content[0])
+
+    alignment = get_alignment(settings)
+    widths = get_widths(settings)
 
     return Table([], alignment, widths, header, csv_content)
 
@@ -251,21 +253,21 @@ def format_cell(content):
     return [Plain(result[1][0]["c"])] if result[1] else []
 
 
-def get_alignment(column_number, settings):
+def get_alignment(settings):
     """
     Returns usable alignment settings for the table columns.
     The alignment can be: L (left), C (center), R (right) or d (default).
     Pads the provided values if they don't exist or not of the required length with the default value.
 
-    :param column_number: The number of columns of the table.
-    :type column_number: int
-    :param settings: A dictionary with settings for this script. This method uses the "alignment" setting.
-    :type settings: dict[str, str]
+    :type settings: object
+    :param settings: A dictionary with settings for this script.
+      This method uses the "column_number" and "alignment" settings.
+    :type settings: dict[str, str | int]
     :return: The list with alignments
     :rtype: list
     """
     alignment = list(settings["alignment"])
-    alignment = pad_element(alignment, column_number, "d")
+    alignment = pad_element(alignment, settings["column_number"], "d")
     return [ALIGNMENT.get(key.lower(), ALIGNMENT["d"]) for key in alignment]
 
 
@@ -294,20 +296,19 @@ def pad_element(element, wanted_length, pad_value):
     return element
 
 
-def get_widths(column_number, settings):
+def get_widths(settings):
     """
     Returns width values for the table columns.
     Pads the provided values if they don't exist or are missing for some columnwith the default value.
 
-    :param column_number: The number of columns of the table.
-    :type column_number: int
-    :param settings: A dictionary with settings for this script. This method uses the "widths" setting.
-    :type settings: dict[str, str]
+    :param settings: A dictionary with settings for this script.
+      This method uses the "column_number" and "widths" settings.
+    :type settings: dict[str, str | int]
     :return: The list with the widths
     :rtype: list
     """
     widths = [convert_to_float(width) for width in settings["widths"].split(" ")]
-    widths = pad_element(widths, column_number, 0.0)
+    widths = pad_element(widths, settings["column_number"], 0.0)
     return widths
 
 
