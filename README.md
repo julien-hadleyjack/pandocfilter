@@ -1,10 +1,10 @@
 # Collection of custom pandoc filters
 
-This project is a collection of filters that I created:
+This project is a collection of pandoc filters that I created:
 
 | Name                  | Description                              |
 |-----------------------|------------------------------------------|
-| [minted](#minted)     | Use minted to show code blocks in LaTex  |
+| [minted](#minted)     | Use minted to show code blocks in LaTeX  |
 | [csvtable](#csvtable) | Include Content from CSV files as tables |
 
 [pandoc](http://pandoc.org/) is a great tool that can be used to convert between many different formats (HTML, Markdown, restructuredText, LaTeX, Microsoft Word, EPUB, ...). For example you can write a document in Markdown (which make writing text very easy) and format the final result as a LaTeX document (which can produce beautifully formatted documents suitable for print and digital distribution) by using pandoc to convert between the two formats.
@@ -135,7 +135,7 @@ The attributes that will be used are:
 | language      | The language that is used for syntax highlighting. See the list of [available lexers](http://pygments.org/docs/lexers/) for Pygmentize to find out the name that you should use. |
 | caption       | The text for a caption. (Default: None)                                                                                                                                              |
 
-All furhter attributes and classes (except `minted`) will be passed onto the minted environment. If that option doesn't exist, then it will produce an error during building of the LaTex document.
+All further attributes and classes (except `minted`) will be passed onto the minted environment. If that option doesn't exist, then it will produce an error during building of the LaTex document.
 
 # csvtable
 

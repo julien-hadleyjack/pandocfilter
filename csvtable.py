@@ -85,21 +85,21 @@ def get_row(row):
     return [format_cell(elem) for elem in row]
 
 
-def get_header(reader, paired_attributes):
+def get_header(reader, settings):
     """
     Returns the content of the header already formatted if a header exists.
 
     :param reader: The csv reader
     :type reader: csv.reader
-    :param paired_attributes: The paired attributes for the code
-    :type paired_attributes: dict[str, str]
+    :param settings: A dictionary with settings for this script. This method uses the "header" setting.
+    :type settings: dict[str, str]
     :return: A list of the header row with the cell content as elements used by pandoc or an empty list if no header
     :rtype: list
     """
-    return get_row(next(reader)) if get_setting("header", False, paired_attributes) else []
+    return get_row(next(reader)) if settings["header"] else []
 
 
-def get_alignment(column_number, paired_attributes):
+def get_alignment(column_number, settings):
     """
     Returns usable alignment settings for the table columns.
     The alignment can be: L (left), C (center), R (right) or d (default).
@@ -107,12 +107,12 @@ def get_alignment(column_number, paired_attributes):
 
     :param column_number: The number of columns of the table.
     :type column_number: int
-    :param paired_attributes: The paired attributes for the code contain either "align" or "aligns" with the alignments
-    :type paired_attributes: dict[str, str]
+    :param settings: A dictionary with settings for this script. This method uses the "alignment" setting.
+    :type settings: dict[str, str]
     :return: The list with alignments
     :rtype: list
     """
-    alignment = list(get_setting(["align", "aligns"], "", paired_attributes))
+    alignment = list(settings["alignment"])
     alignment = pad_element(alignment, column_number, "d")
     return [ALIGNMENT.get(key.lower(), ALIGNMENT["d"]) for key in alignment]
 
@@ -159,39 +159,34 @@ def pad_element(element, wanted_length, pad_value):
     return element
 
 
-def get_widths(column_number, paired_attributes):
+def get_widths(column_number, settings):
     """
     Returns width values for the table columns.
     Pads the provided values if they don't exist or are missing for some columnwith the default value.
 
     :param column_number: The number of columns of the table.
     :type column_number: int
-    :param paired_attributes: The paired attributes for the code containing either "width" or "widths" with the widths.
-    :type paired_attributes: dict[str, str]
+    :param settings: A dictionary with settings for this script. This method uses the "widths" setting.
+    :type settings: dict[str, str]
     :return: The list with the widths
     :rtype: list
     """
-    widths = get_setting(["width", "widths"], "", paired_attributes)
-    widths = [convert_to_float(width) for width in widths.split(" ")]
+    widths = [convert_to_float(width) for width in settings["widths"].split(" ")]
     widths = pad_element(widths, column_number, 0.0)
     return widths
 
 
-def get_reader(file, paired_attributes):
+def get_reader(file, settings):
     """
     Returns the CSV reader for a file.
 
     :param file: The file for the CSV content.
     :type file: io.StringIO
-    :param paired_attributes: The paired attributes for the code which can contain "delimiter" and "quotechar" settings.
+    :param settings: The paired attributes for the code which can contain "delimiter" and "quotechar" settings.
     :return: The CSV reader
     :rtype: csv.reader
     """
-    return csv.reader(
-            file,
-            delimiter=get_setting("delimiter", ",", paired_attributes),
-            quotechar=get_setting("quotechar", '"', paired_attributes)
-    )
+    return csv.reader(file, delimiter=settings["delimiter"], quotechar=settings["quote_char"])
 
 
 def get_content_from_url(url):
@@ -212,41 +207,42 @@ def get_content_from_url(url):
     return StringIO(response.text)
 
 
-def get_csv(paired_attributes, content):
+def get_csv(content, settings):
     """
     Return the CSV content. This method will look at urls, files and code block content.
 
-    :param paired_attributes:
-    :type paired_attributes: dict[str, str]
     :param content: The code block content
+    :type content: str
+    :param settings: A dictionary with settings for this script. This method uses the "file_name" setting.
+    :type settings: dict[str, str]
     :return: The CSV content.
     :rtype: io.StringIO
     """
-    filename = get_setting(["url", "file"], "", paired_attributes)
+    file_name = settings["file_name"]
 
-    if filename.startswith("http"):
-        result = get_content_from_url(filename)
-    elif filename:
-        result = open(filename)
+    if file_name.startswith("http"):
+        result = get_content_from_url(file_name)
+    elif file_name:
+        result = open(file_name)
     else:
         result = StringIO(content)
 
     return result
 
 
-def get_setting(key, default_value="", paired_attributes=None, meta=None, remove=False):
+def get_setting(key, paired_attributes, meta=None, default_value="", remove=False):
     """
     Looks at the attributes of the code and the metadata of the document (in that order) and returns the value when it
     finds one with the specified key.
 
     :param key: The key or keys that should be searched for. Only the result for the first key found will be returned.
     :type key: str | list[str]
-    :param default_value: The value that should be found if the key(s) can't be found.
-    :type default_value: str | object
-    :param paired_attributes:
+    :param paired_attributes: The attributes for the code.
     :type paired_attributes: dict[str, str]
     :param meta: The metadata of the document.
     :type meta: dict[str, str]
+    :param default_value: The value that should be found if the key(s) can't be found.
+    :type default_value: str | object
     :param remove: Should the setting be removed from the attributes if it was found there.
     :type remove: bool
     :return: The value that is associated with the key or the default value if key not found.
@@ -262,31 +258,76 @@ def get_setting(key, default_value="", paired_attributes=None, meta=None, remove
     return default_value
 
 
-def get_table(paired_attributes, content):
-    csv_input = get_csv(paired_attributes, content)
+def get_table(content, settings):
+    """
+    Creates a table as represented in pandoc.
 
-    reader = get_reader(csv_input, paired_attributes)
-    header = get_header(reader, paired_attributes)
+    :param content: The content of the code block
+    :type content: str
+    :param settings: The settings of this script.
+    :return: The table as represented in pandoc
+    :rtype: dict
+    """
+    csv_input = get_csv(content, settings)
+
+    reader = get_reader(csv_input, settings)
+    header = get_header(reader, settings)
     csv_content = [get_row(row) for row in reader]
 
     if hasattr(csv_input, "close"):
         csv_input.close()
 
-    alignment = get_alignment(len(csv_content[0]), paired_attributes)
-    widths = get_widths(len(csv_content[0]), paired_attributes)
+    alignment = get_alignment(len(csv_content[0]), settings)
+    widths = get_widths(len(csv_content[0]), settings)
 
     return Table([], alignment, widths, header, csv_content)
 
 
+def generate_settings(paired_attributes, meta):
+    """
+    Generates a settings object containg all the settings from the code and the metadata of the document.
+
+    :param paired_attributes: The attributes of the code.
+    :type paired_attributes: dict[str, str]
+    :param meta: The metadata of the document.
+    :type meta: dict[str, str]
+    :return: The settings
+    :rtype: dict[str, str]
+    """
+    return {
+        "file_name":  get_setting(["url", "file"], paired_attributes),
+        "delimiter":  get_setting("delimiter", paired_attributes, meta, ","),
+        "quote_char": get_setting("quotechar", paired_attributes, meta, '"'),
+        "header":     get_setting(["header", "headers"], paired_attributes, meta, False),
+        "alignment":  get_setting(["align", "aligns", "alignment", "alignments"], paired_attributes, meta),
+        "widths":     get_setting(["width", "widths"], paired_attributes, meta)
+    }
+
+
 def csv_table(key, value, fmt, meta):
+    """
+    The filter that creates a table from a csv file.
+
+    :param key: The type of pandoc object
+    :type key: str
+    :param value: The contents of the object
+    :type value: str | list
+    :param fmt: The target output format
+    :type fmt: str
+    :param meta: The metadata of the document.
+    :type meta: dict[str, str]
+    :return: The created table or none if this filter doesn't apply to the element
+    :rtype: dict | None
+    """
     if not check_preconditions(key, value):
         return
 
     (_, classes, paired_attributes), content = value
 
     paired_attributes = map_attributes(paired_attributes)
+    settings = generate_settings(paired_attributes, meta)
 
-    return get_table(paired_attributes, content)
+    return get_table(content, settings)
 
 
 def parse_arguments():
