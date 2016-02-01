@@ -130,10 +130,10 @@ def hello_world(name="World"):
 
 The attributes that will be used are:
 
-| Name          | Description                                                                                                                                                                          |
+| Name          | Description                                                                                                                                                                      |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | language      | The language that is used for syntax highlighting. See the list of [available lexers](http://pygments.org/docs/lexers/) for Pygmentize to find out the name that you should use. |
-| caption       | The text for a caption. (Default: None)                                                                                                                                              |
+| caption       | The text for a caption. (Default: None)                                                                                                                                          |
 
 All further attributes and classes (except `minted`) will be passed onto the minted environment. If that option doesn't exist, then it will produce an error during building of the LaTex document.
 

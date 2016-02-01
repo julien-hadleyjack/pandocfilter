@@ -752,6 +752,151 @@
                 ""
             ],
             "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-9",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "9",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "file",
+                            "data/csvtable_example1.csv"
+                        ],
+                        [
+                            "content_pos",
+                            "bottom"
+                        ],
+                        [
+                            "header",
+                            "yes"
+                        ]
+                    ]
+                ],
+                "Text 5,Text 6"
+            ],
+            "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-10",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "10",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "file",
+                            "data/csvtable_example1.csv"
+                        ],
+                        [
+                            "quote_char",
+                            "|"
+                        ],
+                        [
+                            "header",
+                            "yes"
+                        ]
+                    ]
+                ],
+                "|New Header 1|,New Header 2"
+            ],
+            "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-11",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "11",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "delimiter",
+                            "|"
+                        ]
+                    ]
+                ],
+                "Header 1 | New Header 2 | Header 3 | Header 4\nText 1   | Text 2       | Text 3   | Test 4"
+            ],
+            "t": "CodeBlock"
         }
     ]
 ]

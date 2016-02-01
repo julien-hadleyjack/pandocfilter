@@ -65,3 +65,28 @@ Text 3,Text 4
     delimiter=;
     header=yes}
 ```
+
+# Example 9
+
+```{.table
+    file="data/csvtable_example1.csv"
+    content_pos=bottom
+    header=yes}
+Text 5,Text 6
+```
+
+# Example 10
+
+```{.table
+    file="data/csvtable_example1.csv"
+    quote_char=|
+    header=yes}
+|New Header 1|,New Header 2
+```
+
+# Example 11
+
+```{.table delimiter="|"}
+Header 1 | New Header 2 | Header 3 | Header 4
+Text 1   | Text 2       | Text 3   | Test 4
+```

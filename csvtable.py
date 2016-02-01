@@ -96,6 +96,7 @@ def generate_settings(paired_attributes, meta):
     """
     return {
         "file_name": get_setting(["url", "file"], paired_attributes),
+        "content_pos": get_setting("content_pos", paired_attributes, meta, "top"),
         "delimiter": get_setting("delimiter", paired_attributes, meta, ","),
         "quote_char": get_setting(["quotechar", "quote_char"], paired_attributes, meta, '"'),
         "header": get_setting(["header", "headers"], paired_attributes, meta, False),
@@ -172,14 +173,20 @@ def get_csv(content, settings):
     """
     file_name = settings["file_name"]
 
-    if file_name.startswith("http"):
-        result = get_content_from_url(file_name)
-    elif file_name:
-        result = open(file_name)
-    else:
-        result = StringIO(content)
+    if not file_name:
+        return StringIO(content)
 
-    return result
+    if file_name.startswith("http"):
+        csv_result = get_content_from_url(file_name)
+    else:
+        csv_result = StringIO(open(file_name).read())
+
+    if settings["content_pos"] == "bottom":
+        order1, order2 = csv_result.getvalue(), content
+    else:
+        order1, order2 = content, csv_result.getvalue()
+
+    return StringIO(order1 + "\n" + order2)
 
 
 def get_content_from_url(url):
