@@ -337,10 +337,8 @@ def convert_to_float(text, default=0.0):
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Include content from CSV files as tables in Pandoc.',
-                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-m", "--markdown", action="store_true",
-                        help='Parse cell content as markdown')
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("-v", '--version', action='version', version='%(prog)s 0.1')
 
     return parser.parse_args()
