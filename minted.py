@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -13,6 +13,8 @@ import textwrap
 
 from pandocfilters import RawBlock, toJSONFilter, RawInline
 
+__VERSION__ = "0.1"
+__AUTHOR__ = "Julien Hadley Jack <git@jlhj.de>"
 
 def minted(key, value, fmt, meta):
     if not check_preconditions(key, value, meta):
@@ -163,14 +165,24 @@ def format_code(content, formatted_attributes, settings):
 
 
 def parse_arguments():
+    """
+    Provides a minimal command line interface that shows help text and version information
+
+    :return: The arguments from the command line.
+    :rtype: argparse.Namespace
+    """
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("-v", '--version', action='version', version='%(prog)s 0.1')
+    parser.add_argument("-v", '--version', action='version', version='%(prog)s ' + __VERSION__)
 
     return parser.parse_args()
 
 
 def main():
+    """
+    This is the main method that gets data from stdin,
+    applies the filter and returns the result to stdout.
+    """
     toJSONFilter(minted)
 
 
