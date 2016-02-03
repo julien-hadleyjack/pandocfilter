@@ -90,3 +90,20 @@ Text 5,Text 6
 Header 1 | New Header 2 | Header 3 | Header 4
 Text 1   | Text 2       | Text 3   | Test 4
 ```
+
+# Example 12
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Text 1   | Text 2   |
+| Text 3   | Text 4   |
+
+Table: This is a table caption 
+
+# Example 13
+
+```{.table
+    file="data/csvtable_example1.csv"
+    caption="This is a table caption"
+    header=yes}
+```

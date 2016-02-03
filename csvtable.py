@@ -99,6 +99,7 @@ def generate_settings(paired_attributes, meta):
     """
     return {
         "file_name": get_setting(["url", "file"], paired_attributes),
+        "caption": get_setting("caption", paired_attributes),
         "content_pos": get_setting("content_pos", paired_attributes, meta, "top"),
         "delimiter": get_setting("delimiter", paired_attributes, meta, ","),
         "quote_char": get_setting(["quotechar", "quote_char"], paired_attributes, meta, '"'),
@@ -157,10 +158,11 @@ def get_table(content, settings):
 
     settings["column_number"] = len(csv_content[0])
 
+    caption = get_caption(settings)
     alignment = get_alignment(settings)
     widths = get_widths(settings)
 
-    return Table([], alignment, widths, header, csv_content)
+    return Table(caption, alignment, widths, header, csv_content)
 
 
 def get_csv(content, settings):
@@ -189,7 +191,9 @@ def get_csv(content, settings):
     else:
         order1, order2 = content, csv_result.getvalue()
 
-    return StringIO(order1 + "\n" + order2)
+    if order1:
+        order1 += "\n"
+    return StringIO(order1 + order2)
 
 
 def get_content_from_url(url):
@@ -261,6 +265,14 @@ def format_cell(content):
     """
     result = json.loads(pypandoc.convert(content, format='md', to="json"))
     return [Plain(result[1][0]["c"])] if result[1] else []
+
+
+def get_caption(settings):
+    if settings["caption"]:
+        result = json.loads(pypandoc.convert(settings["caption"], format='md', to="json"))
+        return result[1][0]["c"]
+    else:
+        return []
 
 
 def get_alignment(settings):

@@ -3,6 +3,8 @@
 \begin{longtable}[c]{@{}ll@{}}
 \toprule
 Header 1 & Header 2\tabularnewline
+\midrule
+\endhead
 Text 1 & Text 2\tabularnewline
 Text 3 & Text 4\tabularnewline
 \bottomrule
@@ -13,6 +15,8 @@ Text 3 & Text 4\tabularnewline
 \begin{longtable}[c]{@{}ll@{}}
 \toprule
 Header 1 & Header 2\tabularnewline
+\midrule
+\endhead
 Text 1 & Text 2\tabularnewline
 Text 3 & Text 4\tabularnewline
 \bottomrule
@@ -110,6 +114,8 @@ Text 4
 \begin{longtable}[c]{@{}ll@{}}
 \toprule
 Header 1 & Header 2\tabularnewline
+\midrule
+\endhead
 &\tabularnewline
 öäüß & 您好\tabularnewline
 \bottomrule
@@ -147,5 +153,39 @@ Text 3 & Text 4\tabularnewline
 \toprule
 Header 1 & New Header 2 & Header 3 & Header 4\tabularnewline
 Text 1 & Text 2 & Text 3 & Test 4\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Example 12}\label{example-12}
+
+\begin{longtable}[c]{@{}ll@{}}
+\caption{This is a table caption}\tabularnewline
+\toprule
+Header 1 & Header 2\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Header 1 & Header 2\tabularnewline
+\midrule
+\endhead
+Text 1 & Text 2\tabularnewline
+Text 3 & Text 4\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Example 13}\label{example-13}
+
+\begin{longtable}[c]{@{}ll@{}}
+\caption{This is a table caption}\tabularnewline
+\toprule
+Header 1 & Header 2\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Header 1 & Header 2\tabularnewline
+\midrule
+\endhead
+Text 1 & Text 2\tabularnewline
+Text 3 & Text 4\tabularnewline
 \bottomrule
 \end{longtable}
