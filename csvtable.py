@@ -238,7 +238,8 @@ def get_header(reader, settings):
     :return: A list of the header row with the cell content as elements used by pandoc or an empty list if no header
     :rtype: list
     """
-    return get_row(next(reader)) if settings["header"] else []
+    header_enabled = settings["header"] and settings["header"] != "no"
+    return get_row(next(reader)) if header_enabled else []
 
 
 def get_row(row):

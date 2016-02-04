@@ -107,3 +107,19 @@ Table: This is a table caption
     caption="This is a table caption"
     header=yes}
 ```
+
+# Example 14
+
+```{.table header=yes align=R}
+Header 1, Header 2
+Text 1,Text 2
+Text 3,Text 4
+```
+
+# Example 15
+
+```{.table header=yes align=RLLLL}
+Header 1, Header 2
+Text 1,Text 2
+Text 3,Text 4
+```

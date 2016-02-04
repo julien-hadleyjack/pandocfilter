@@ -1152,6 +1152,100 @@
                 ""
             ],
             "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-14",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "14",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "header",
+                            "yes"
+                        ],
+                        [
+                            "align",
+                            "R"
+                        ]
+                    ]
+                ],
+                "Header 1, Header 2\nText 1,Text 2\nText 3,Text 4"
+            ],
+            "t": "CodeBlock"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-15",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "15",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [
+                    "",
+                    [
+                        "table"
+                    ],
+                    [
+                        [
+                            "header",
+                            "yes"
+                        ],
+                        [
+                            "align",
+                            "RLLLL"
+                        ]
+                    ]
+                ],
+                "Header 1, Header 2\nText 1,Text 2\nText 3,Text 4"
+            ],
+            "t": "CodeBlock"
         }
     ]
 ]
