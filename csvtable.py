@@ -105,7 +105,8 @@ def generate_settings(paired_attributes, meta):
         "quote_char": get_setting(["quotechar", "quote_char"], paired_attributes, meta, '"'),
         "header": get_setting(["header", "headers"], paired_attributes, meta, False),
         "alignment": get_setting(["align", "aligns", "alignment", "alignments"], paired_attributes, meta),
-        "widths": get_setting(["width", "widths"], paired_attributes, meta)
+        "widths": get_setting(["width", "widths"], paired_attributes, meta),
+        "colorize": get_setting(["colorize", "colourise"], paired_attributes, meta)
     }
 
 
@@ -264,14 +265,14 @@ def format_cell(content, settings):
     :return: Returns either an empty list (if content is empty) or with one "Plain" element with the JSON as content
     :rtype: list
     """
-    if settings.get("colorize") == "yes":
+    if settings.get("colorize") in ["yes", "1"]:
         colors = {
-            "\\cmark": "\cellcolor{green!25}",
-            "\\xmark": "\cellcolor{red!25}",
-            "(\\cmark)": "\cellcolor{orange!25}",
-            "(\\xmark)": "\cellcolor{orange!25}"
+            "\\cmark": "\\cellcolor{green!25}",
+            "\\xmark": "\\cellcolor{red!25}",
+            "(\\cmark)": "\\cellcolor{orange!25}",
+            "(\\xmark)": "\\cellcolor{orange!25}"
         }
-        content += colors.get(content, "")
+        content = content + colors.get(content.strip(), "")
 
     result = json.loads(pypandoc.convert(content, format='md', to="json"))
     return [Plain(result[1][0]["c"])] if result[1] else []

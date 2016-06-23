@@ -123,3 +123,11 @@ Header 1, Header 2
 Text 1,Text 2
 Text 3,Text 4
 ```
+
+# Example 16
+
+```{.table colorize=yes}
+\cmark,\cmark \xmark
+\xmark, \cmark text
+(\xmark),(\cmark)
+```

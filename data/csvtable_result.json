@@ -2967,6 +2967,199 @@
                 ]
             ],
             "t": "Table"
+        },
+        {
+            "c": [
+                1,
+                [
+                    "example-16",
+                    [],
+                    []
+                ],
+                [
+                    {
+                        "c": "Example",
+                        "t": "Str"
+                    },
+                    {
+                        "c": [],
+                        "t": "Space"
+                    },
+                    {
+                        "c": "16",
+                        "t": "Str"
+                    }
+                ]
+            ],
+            "t": "Header"
+        },
+        {
+            "c": [
+                [],
+                [
+                    {
+                        "c": [],
+                        "t": "AlignDefault"
+                    },
+                    {
+                        "c": [],
+                        "t": "AlignDefault"
+                    }
+                ],
+                [
+                    0.0,
+                    0.0
+                ],
+                [],
+                [
+                    [
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\cmark"
+                                        ],
+                                        "t": "RawInline"
+                                    },
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\cellcolor{green!25}"
+                                        ],
+                                        "t": "RawInline"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ],
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\cmark "
+                                        ],
+                                        "t": "RawInline"
+                                    },
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\xmark"
+                                        ],
+                                        "t": "RawInline"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ]
+                    ],
+                    [
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\xmark"
+                                        ],
+                                        "t": "RawInline"
+                                    },
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\cellcolor{red!25}"
+                                        ],
+                                        "t": "RawInline"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ],
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\cmark "
+                                        ],
+                                        "t": "RawInline"
+                                    },
+                                    {
+                                        "c": "text",
+                                        "t": "Str"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ]
+                    ],
+                    [
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": "(",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\xmark"
+                                        ],
+                                        "t": "RawInline"
+                                    },
+                                    {
+                                        "c": ")",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\cellcolor{orange!25}"
+                                        ],
+                                        "t": "RawInline"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ],
+                        [
+                            {
+                                "c": [
+                                    {
+                                        "c": "(",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\cmark"
+                                        ],
+                                        "t": "RawInline"
+                                    },
+                                    {
+                                        "c": ")",
+                                        "t": "Str"
+                                    },
+                                    {
+                                        "c": [
+                                            "tex",
+                                            "\\cellcolor{orange!25}"
+                                        ],
+                                        "t": "RawInline"
+                                    }
+                                ],
+                                "t": "Plain"
+                            }
+                        ]
+                    ]
+                ]
+            ],
+            "t": "Table"
         }
     ]
 ]
