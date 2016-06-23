@@ -151,7 +151,7 @@ def get_table(content, settings):
 
     reader = get_reader(csv_input, settings)
     header = get_header(reader, settings)
-    csv_content = [get_row(row) for row in reader]
+    csv_content = [get_row(row, settings) for row in reader]
 
     if hasattr(csv_input, "close"):
         csv_input.close()
@@ -239,10 +239,10 @@ def get_header(reader, settings):
     :rtype: list
     """
     header_enabled = settings["header"] and settings["header"] != "no"
-    return get_row(next(reader)) if header_enabled else []
+    return get_row(next(reader), settings) if header_enabled else []
 
 
-def get_row(row):
+def get_row(row, settings):
     """
     Returns the content of the row already formatted.
 
@@ -251,10 +251,10 @@ def get_row(row):
     :return: A list of the row with the cell content as elements used by pandoc
     :rtype: list[list]
     """
-    return [format_cell(elem) for elem in row]
+    return [format_cell(elem, settings) for elem in row]
 
 
-def format_cell(content):
+def format_cell(content, settings):
     """
     Interpret the cell content as markdown and convert it to the JSON structure used by pandoc.
     This function uses `pypandoc <https://pypi.python.org/pypi/pypandoc/>`_ for the conversion.
@@ -264,6 +264,15 @@ def format_cell(content):
     :return: Returns either an empty list (if content is empty) or with one "Plain" element with the JSON as content
     :rtype: list
     """
+    if settings.get("colorize") == "yes":
+        colors = {
+            "\\cmark": "\cellcolor{green!25}",
+            "\\xmark": "\cellcolor{red!25}",
+            "(\\cmark)": "\cellcolor{orange!25}",
+            "(\\xmark)": "\cellcolor{orange!25}"
+        }
+        content += colors.get(content, "")
+
     result = json.loads(pypandoc.convert(content, format='md', to="json"))
     return [Plain(result[1][0]["c"])] if result[1] else []
 
